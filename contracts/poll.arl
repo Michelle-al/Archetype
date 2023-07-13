@@ -1,0 +1,10 @@
+archetype poll_contract(const expiration_date: date)
+
+variable set_expiration : date = expiration_date
+constant owner : address = tz1TQdHmZHqbhvooPtoP3hsvBeCYz3Chwgt2
+
+
+entry set_expiration_date() {
+    called by owner
+    
+}

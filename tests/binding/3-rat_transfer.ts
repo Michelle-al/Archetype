@@ -1,9 +1,9 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-const exec_arg_to_mich = (param: string): att.Micheline => {
-    return att.string_to_mich(param);
+const payback_arg_to_mich = (): att.Micheline => {
+    return att.unit_mich;
 }
-export class Hello {
+export class Rat_transfer {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -21,28 +21,21 @@ export class Hello {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = (await ex.deploy("./contracts/hello.arl", {}, params)).address;
+        const address = (await ex.deploy("./contracts/rat_transfer.arl", {}, params)).address;
         this.address = address;
     }
-    async exec(param: string, params: Partial<ex.Parameters>): Promise<att.CallResult> {
+    async payback(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
-            return await ex.call(this.address, "exec", exec_arg_to_mich(param), params);
+            return await ex.call(this.address, "payback", payback_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
-    async get_exec_param(param: string, params: Partial<ex.Parameters>): Promise<att.CallParameter> {
+    async get_payback_param(params: Partial<ex.Parameters>): Promise<att.CallParameter> {
         if (this.address != undefined) {
-            return await ex.get_call_param(this.address, "exec", exec_arg_to_mich(param), params);
-        }
-        throw new Error("Contract not initialised");
-    }
-    async get_s(): Promise<string> {
-        if (this.address != undefined) {
-            const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_string(storage);
+            return await ex.get_call_param(this.address, "payback", payback_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
     errors = {};
 }
-export const hello = new Hello();
+export const rat_transfer = new Rat_transfer();

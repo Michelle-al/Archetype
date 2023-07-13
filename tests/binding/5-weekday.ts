@@ -1,9 +1,9 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-const exec_arg_to_mich = (param: string): att.Micheline => {
-    return att.string_to_mich(param);
+const weekday_arg_to_mich = (d: Date): att.Micheline => {
+    return att.date_to_mich(d);
 }
-export class Hello {
+export class Weekday {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -21,28 +21,28 @@ export class Hello {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = (await ex.deploy("./contracts/hello.arl", {}, params)).address;
+        const address = (await ex.deploy("./contracts/weekday.arl", {}, params)).address;
         this.address = address;
     }
-    async exec(param: string, params: Partial<ex.Parameters>): Promise<att.CallResult> {
+    async weekday(d: Date, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
-            return await ex.call(this.address, "exec", exec_arg_to_mich(param), params);
+            return await ex.call(this.address, "weekday", weekday_arg_to_mich(d), params);
         }
         throw new Error("Contract not initialised");
     }
-    async get_exec_param(param: string, params: Partial<ex.Parameters>): Promise<att.CallParameter> {
+    async get_weekday_param(d: Date, params: Partial<ex.Parameters>): Promise<att.CallParameter> {
         if (this.address != undefined) {
-            return await ex.get_call_param(this.address, "exec", exec_arg_to_mich(param), params);
+            return await ex.get_call_param(this.address, "weekday", weekday_arg_to_mich(d), params);
         }
         throw new Error("Contract not initialised");
     }
-    async get_s(): Promise<string> {
+    async get_n(): Promise<att.Int> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_string(storage);
+            return att.Int.from_mich(storage);
         }
         throw new Error("Contract not initialised");
     }
     errors = {};
 }
-export const hello = new Hello();
+export const weekday = new Weekday();

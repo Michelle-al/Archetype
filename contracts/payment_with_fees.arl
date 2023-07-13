@@ -1,0 +1,22 @@
+archetype fees
+
+constant owner : address = tz1TQdHmZHqbhvooPtoP3hsvBeCYz3Chwgt2
+variable fee : rational = 10%
+
+
+entry pay(beneficiary : address) {
+    called by owner
+
+    require {
+        r: transferred > 0tz
+    }
+     
+    effect {
+        
+        transfer (transferred - (fee * transferred)) to beneficiary;
+        transfer (fee *transferred) to owner
+        
+    }
+
+}
+
